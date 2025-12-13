@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "Matrix.h"
-#include "MataMvidia.h"test
+#include "MataMvidia.h"
 
 using namespace std;
 typedef bool (*testFunc)(void);
