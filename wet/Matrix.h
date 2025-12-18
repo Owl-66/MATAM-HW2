@@ -7,13 +7,24 @@
 
 
 class Matrix {
+
 private:
     unsigned int rows;
     unsigned int columns;
     int* matrix;
+
 public:
     Matrix();
     Matrix(unsigned int rows, unsigned int columns, int value = 0);
+
+    ~Matrix();
+
+    unsigned int getRows() const;
+    unsigned int getColumns() const;
+    int* getMatrix() const;
+
+    Matrix(const Matrix& other);
+    Matrix& operator=(const Matrix& other);
 };
 
 
