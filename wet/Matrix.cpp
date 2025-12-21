@@ -57,11 +57,12 @@ Matrix& Matrix::operator=(const Matrix &other) {
         return *this;
     }
 
+    int* temp = new int[rows * columns];
     delete[] this -> matrix;
 
     this -> rows = other.rows;
     this -> columns = other.columns;
-    this -> matrix = new int[rows * columns];
+    this -> matrix = temp;
 
     for (unsigned int i = 0; i < rows * columns; i++) {
         this -> matrix[i] = other.matrix[i];
