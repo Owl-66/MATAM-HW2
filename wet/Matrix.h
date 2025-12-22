@@ -40,6 +40,9 @@ public:
     Matrix operator-()const;
     Matrix& operator*=(int n);
 
+    Matrix rotateClockwise() const;
+    Matrix rotateCounterClockwise() const;
+
     friend bool operator==(const Matrix& matrix1, const Matrix& matrix2);
 
     double frobenius() const;

@@ -57,7 +57,7 @@ Matrix& Matrix::operator=(const Matrix &other) {
         return *this;
     }
 
-    int* temp = new int[rows * columns];
+    int* temp = new int[other.rows * other.columns];
     delete[] this -> matrix;
 
     this -> rows = other.rows;
@@ -184,6 +184,31 @@ Matrix operator*(int n, const Matrix& matrix) {
 
 Matrix operator*(const Matrix& matrix, int n) {
     return n * matrix;
+}
+
+
+
+
+Matrix Matrix::rotateClockwise() const {
+    Matrix result(this -> columns, this -> rows);
+
+    for (unsigned int row = 0; row < result.rows; row++) {
+        for (unsigned int column = 0; column < result.columns; column++) {
+            result.matrix[row * result.columns + column] = this -> matrix[(this->rows - column - 1) * (this -> columns) + row];
+        }
+    }
+    return result;
+}
+
+Matrix Matrix::rotateCounterClockwise() const {
+    Matrix result(this -> columns, this -> rows);
+
+    for (unsigned int row = 0; row < result.rows; row++) {
+        for (unsigned int column = 0; column < result.columns; column++) {
+            result.matrix[row * result.columns + column] = this -> matrix[column * (this -> columns) + (this->columns - row - 1)];
+        }
+    }
+    return result;
 }
 
 
