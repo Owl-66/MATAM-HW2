@@ -79,16 +79,14 @@ int& Matrix::operator()(unsigned int row, unsigned int column) {
     return this->matrix[this->columns*row + column];
 }
 
-
-
-
-
 const int& Matrix::operator()(unsigned int row, unsigned int column) const {
     if (row >= rows || column >= columns) {
         exitWithError(MatamErrorType::OutOfBounds);
     }
     return this->matrix[this->columns*row + column];
 }
+
+
 
 std::ostream& operator<<(std::ostream& os, const Matrix& matrix) {
     for (unsigned int i = 0; i < matrix.getRows(); i++) {
@@ -101,6 +99,44 @@ std::ostream& operator<<(std::ostream& os, const Matrix& matrix) {
     return os;
 }
 
+
+
+
+Matrix& Matrix::operator+=(const Matrix& other) {
+    if (this -> rows != other.rows || this -> columns != other.columns) {
+        exitWithError(MatamErrorType::UnmatchedSizes);
+    }
+    for (unsigned int i = 0; i < this -> rows; i++) {
+        for (unsigned int j = 0; j < this -> columns; j++) {
+            this -> matrix[i * this -> columns + j] += other(i, j);
+        }
+    }
+    return *this;
+}
+
+Matrix& Matrix::operator-=(const Matrix& other) {
+    return *this += (-other);
+}
+
+Matrix& Matrix::operator*=(const Matrix& other) {
+    if (this -> columns != other.rows) {
+        exitWithError(MatamErrorType::UnmatchedSizes);
+    }
+    Matrix temp(this -> rows, other.columns);
+    int rowSum = 0;
+    for (unsigned int row = 0; row < this -> rows; row++) {
+        for (unsigned int column = 0; column < other.columns; column++) {
+            rowSum = 0;
+            for (unsigned int i = 0; i < this -> columns; i++) {
+                rowSum += this->matrix[row * this -> columns + i] * other(i, column);
+            }
+            temp(row, column) = rowSum;
+        }
+    }
+    *this = temp;
+    return *this;
+}
+
 Matrix Matrix::operator-() const{
     Matrix negative = Matrix(this->rows, this->columns);
     for (unsigned int i = 0; i < this->rows; i++) {
@@ -110,7 +146,6 @@ Matrix Matrix::operator-() const{
     }
     return negative;
 }
-
 
 Matrix& Matrix::operator*=(int n) {
     for (unsigned int i = 0; i < rows; i++) {
@@ -122,15 +157,36 @@ Matrix& Matrix::operator*=(int n) {
 }
 
 
+
+Matrix operator+(const Matrix& matrix1, const Matrix& matrix2) {
+    Matrix result(matrix1);
+    result += matrix2;
+    return result;
+}
+
+Matrix operator-(const Matrix& matrix1, const Matrix& matrix2) {
+    Matrix result(matrix1);
+    result -= matrix2;
+    return result;
+}
+
+Matrix operator*(const Matrix& matrix1, const Matrix& matrix2) {
+    Matrix result(matrix1);
+    result *= matrix2;
+    return result;
+}
+
 Matrix operator*(int n, const Matrix& matrix) {
     Matrix newMatrix = matrix;
     return newMatrix*=n;
 }
 
-
 Matrix operator*(const Matrix& matrix, int n) {
     return n * matrix;
 }
+
+
+
 
 
 bool operator==(const Matrix& matrix1, const Matrix& matrix2) {

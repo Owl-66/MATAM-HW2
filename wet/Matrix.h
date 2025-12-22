@@ -33,14 +33,23 @@ public:
 
     int& operator()(unsigned int row, unsigned int column);
     const int& operator()(unsigned int row, unsigned int column) const;
+
+    Matrix& operator+=(const Matrix& other);
+    Matrix& operator-=(const Matrix& other);
+    Matrix& operator*=(const Matrix& other);
     Matrix operator-()const;
     Matrix& operator*=(int n);
+
     friend bool operator==(const Matrix& matrix1, const Matrix& matrix2);
-    double frobenius()const;
+
+    double frobenius() const;
 };
 
 std::ostream& operator<<(std::ofstream& os, const Matrix& matrix);
 
+Matrix operator+(const Matrix& matrix1, const Matrix& matrix2);
+Matrix operator-(const Matrix& matrix1, const Matrix& matrix2);
+Matrix operator*(const Matrix& matrix1, const Matrix& matrix2);
 Matrix operator*(int n, const Matrix& matrix);
 Matrix operator*(const Matrix& matrix, int n);
 
