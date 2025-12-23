@@ -213,6 +213,17 @@ Matrix Matrix::rotateCounterClockwise() const {
 
 
 
+Matrix Matrix::Transpose() const {
+    Matrix result(this -> columns, this -> rows);
+    for (unsigned int row = 0; row < result.rows; row++) {
+        for (unsigned int column = 0; column < result.columns; column++) {
+            result.matrix[row * result.columns + column] = this->matrix[column * (this -> columns) + row];
+        }
+    }
+    return result;
+}
+
+
 
 
 bool operator==(const Matrix& matrix1, const Matrix& matrix2) {
@@ -243,4 +254,34 @@ double Matrix::frobenius()const {
         }
     }
     return std:: sqrt(sumSquares);
+}
+
+
+int Matrix::CalcDeterminant() const {
+    if (this -> columns != this -> rows) {
+        exitWithError(MatamErrorType::NotSquareMatrix);
+    }
+    if (this -> columns == 1) {
+        return this -> matrix[0];
+    }
+
+    int determinant = 0;
+    Matrix temp(this -> rows -1, this -> columns -1);
+    for (int i = 0; i < columns; i++) {
+        for (int row = 1; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
+                if (column < i) {
+                    temp(row - 1, column) = this->matrix[row * columns + column];
+                }else if (column > i) {
+                    temp(row - 1, column - 1) = this->matrix[row * columns + column];
+                }
+            }
+        }
+        if (i % 2 == 0) {
+            determinant += this -> matrix[i] * temp.CalcDeterminant();
+        }else {
+            determinant -= this -> matrix[i] * temp.CalcDeterminant();
+        }
+    }
+    return determinant;
 }

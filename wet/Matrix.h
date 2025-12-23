@@ -43,9 +43,13 @@ public:
     Matrix rotateClockwise() const;
     Matrix rotateCounterClockwise() const;
 
+    Matrix Transpose() const;
+
     friend bool operator==(const Matrix& matrix1, const Matrix& matrix2);
 
     double frobenius() const;
+
+    int CalcDeterminant() const;
 };
 
 std::ostream& operator<<(std::ofstream& os, const Matrix& matrix);
