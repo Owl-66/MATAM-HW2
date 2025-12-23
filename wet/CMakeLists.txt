@@ -10,4 +10,6 @@ add_executable(wet
         Utilities.cpp
         Utilities.h
         Matrix.cpp
-        Matrix.h)
+        Matrix.h
+        MataMvidia.cpp
+        MataMvidia.h)
