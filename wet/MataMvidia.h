@@ -26,10 +26,10 @@ public:
     MataMvidia(const MataMvidia& other);
     MataMvidia& operator=(const MataMvidia& other);
 
+    friend std::ostream& operator<<(std::ostream& os, const MataMvidia& movie);
+
 
 };
-
-std::ostream& operator<<(std::ostream& os, const MataMvidia& movie);
 
 
 

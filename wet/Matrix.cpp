@@ -163,3 +163,5 @@ double Matrix::frobenius()const {
     }
     return std:: sqrt(sumSquares);
 }
+
+

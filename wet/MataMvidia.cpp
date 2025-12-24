@@ -51,3 +51,38 @@ MataMvidia::MataMvidia(const MataMvidia& other) {
             this->numFrames = 0;
     }
 }
+
+MataMvidia& MataMvidia::operator=(const MataMvidia& other) {
+    if (this == &other) {
+        return *this;
+    }
+    if (other.numFrames > 0 && other.frameArray) {
+        Matrix* temp = new Matrix[other.numFrames];
+
+        for (unsigned int i = 0; i < other.numFrames; i++) {
+            temp[i] = other.frameArray[i];
+        }
+
+        delete[] this->frameArray;
+        this->frameArray = temp;
+    }
+    else {
+        delete[] this->frameArray;
+        this->frameArray = nullptr;
+    }
+    this->numFrames = other.numFrames;
+    this->movieName = other.movieName;
+    this->creatorName = other.creatorName;
+    return *this;
+}
+
+
+std::ostream& operator<<(std::ostream& os, const MataMvidia& movie) {
+    os << "Movie Name: " << movie.movieName << std::endl;
+    os << "Author: " << movie.creatorName << std::endl << std::endl;
+    for (unsigned int i = 0; i < movie.numFrames; i++) {
+        os << "Frame "<< i << ":"<< std::endl << movie.frameArray[i]<< std::endl << std::endl;
+    }
+    os << "-----End of Movie-----" ;
+    return os;
+}

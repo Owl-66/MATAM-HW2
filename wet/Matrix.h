@@ -1,9 +1,7 @@
 //
 // Created by shayhh on 12/18/2025.
 //
-
-#ifndef WET_MATRIX_H
-#define WET_MATRIX_H
+#pragma once
 #include <iosfwd>
 #include <ostream>
 #include <cmath>
@@ -39,11 +37,10 @@ public:
     double frobenius()const;
 };
 
-std::ostream& operator<<(std::ofstream& os, const Matrix& matrix);
+std::ostream& operator<<(std::ostream& os, const Matrix& matrix);
 
 Matrix operator*(int n, const Matrix& matrix);
 Matrix operator*(const Matrix& matrix, int n);
 
 bool operator!=(const Matrix& matrix1, const Matrix& matrix2);
 
-#endif //WET_MATRIX_H
