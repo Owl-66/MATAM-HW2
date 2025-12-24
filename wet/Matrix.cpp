@@ -237,8 +237,8 @@ bool operator!=(const Matrix& matrix1, const Matrix& matrix2) {
 
 double Matrix::CalcFrobeniusNorm(const Matrix& m){
     double sumSquares = 0;
-    for (int i = 0; i < m.rows; i++) {
-        for (int j = 0; j < m.columns; j++) {
+    for (unsigned int i = 0; i < m.rows; i++) {
+        for (unsigned int j = 0; j < m.columns; j++) {
             sumSquares += m.matrix[i*m.columns +j] * m.matrix[i*m.columns +j];
         }
     }
@@ -257,9 +257,9 @@ int Matrix::CalcDeterminant(const Matrix& m){
 
     int determinant = 0;
     Matrix temp(m.rows -1, m.columns -1);
-    for (int i = 0; i < m.columns; i++) {
-        for (int row = 1; row < m.rows; row++) {
-            for (int column = 0; column < m.columns; column++) {
+    for (unsigned int i = 0; i < m.columns; i++) {
+        for (unsigned int row = 1; row < m.rows; row++) {
+            for (unsigned int column = 0; column < m.columns; column++) {
                 if (column < i) {
                     temp(row - 1, column) = m.matrix[row * m.columns + column];
                 }else if (column > i) {

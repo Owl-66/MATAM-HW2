@@ -20,7 +20,7 @@ public:
     Matrix(unsigned int rows, unsigned int columns, int value = 0);
 
     ~Matrix();
-    
+
     Matrix(const Matrix& other);
 
     Matrix& operator=(const Matrix& other);
