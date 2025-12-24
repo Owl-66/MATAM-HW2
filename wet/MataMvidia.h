@@ -27,9 +27,14 @@ public:
     MataMvidia& operator=(const MataMvidia& other);
 
     friend std::ostream& operator<<(std::ostream& os, const MataMvidia& movie);
+    Matrix& operator[](int index);
+    const Matrix& operator[](int index) const;
 
+    MataMvidia& operator+=(const MataMvidia& other);
+    MataMvidia& operator+=(const Matrix& other);
+};
 
 };
 
-
+MataMvidia operator+(const MataMvidia& movie1, const MataMvidia& movie2);
 

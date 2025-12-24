@@ -57,7 +57,7 @@ Matrix& Matrix::operator=(const Matrix &other) {
         return *this;
     }
 
-    int* temp = new int[rows * columns];
+    int* temp = new int[other.rows * other.columns];
     delete[] this -> matrix;
 
     this -> rows = other.rows;
@@ -80,16 +80,14 @@ int& Matrix::operator()(unsigned int row, unsigned int column) {
     return this->matrix[this->columns*row + column];
 }
 
-
-
-
-
 const int& Matrix::operator()(unsigned int row, unsigned int column) const {
     if (row >= rows || column >= columns) {
         exitWithError(MatamErrorType::OutOfBounds);
     }
     return this->matrix[this->columns*row + column];
 }
+
+
 
 std::ostream& operator<<(std::ostream& os, const Matrix& matrix) {
     for (unsigned int i = 0; i < matrix.getRows(); i++) {
@@ -102,6 +100,44 @@ std::ostream& operator<<(std::ostream& os, const Matrix& matrix) {
     return os;
 }
 
+
+
+
+Matrix& Matrix::operator+=(const Matrix& other) {
+    if (this -> rows != other.rows || this -> columns != other.columns) {
+        exitWithError(MatamErrorType::UnmatchedSizes);
+    }
+    for (unsigned int i = 0; i < this -> rows; i++) {
+        for (unsigned int j = 0; j < this -> columns; j++) {
+            this -> matrix[i * this -> columns + j] += other(i, j);
+        }
+    }
+    return *this;
+}
+
+Matrix& Matrix::operator-=(const Matrix& other) {
+    return *this += (-other);
+}
+
+Matrix& Matrix::operator*=(const Matrix& other) {
+    if (this -> columns != other.rows) {
+        exitWithError(MatamErrorType::UnmatchedSizes);
+    }
+    Matrix temp(this -> rows, other.columns);
+    int rowSum = 0;
+    for (unsigned int row = 0; row < this -> rows; row++) {
+        for (unsigned int column = 0; column < other.columns; column++) {
+            rowSum = 0;
+            for (unsigned int i = 0; i < this -> columns; i++) {
+                rowSum += this->matrix[row * this -> columns + i] * other(i, column);
+            }
+            temp(row, column) = rowSum;
+        }
+    }
+    *this = temp;
+    return *this;
+}
+
 Matrix Matrix::operator-() const{
     Matrix negative = Matrix(this->rows, this->columns);
     for (unsigned int i = 0; i < this->rows; i++) {
@@ -111,7 +147,6 @@ Matrix Matrix::operator-() const{
     }
     return negative;
 }
-
 
 Matrix& Matrix::operator*=(int n) {
     for (unsigned int i = 0; i < rows; i++) {
@@ -123,15 +158,72 @@ Matrix& Matrix::operator*=(int n) {
 }
 
 
+
+Matrix operator+(const Matrix& matrix1, const Matrix& matrix2) {
+    Matrix result(matrix1);
+    result += matrix2;
+    return result;
+}
+
+Matrix operator-(const Matrix& matrix1, const Matrix& matrix2) {
+    Matrix result(matrix1);
+    result -= matrix2;
+    return result;
+}
+
+Matrix operator*(const Matrix& matrix1, const Matrix& matrix2) {
+    Matrix result(matrix1);
+    result *= matrix2;
+    return result;
+}
+
 Matrix operator*(int n, const Matrix& matrix) {
     Matrix newMatrix = matrix;
     return newMatrix*=n;
 }
 
-
 Matrix operator*(const Matrix& matrix, int n) {
     return n * matrix;
 }
+
+
+
+
+Matrix Matrix::rotateClockwise() const {
+    Matrix result(this -> columns, this -> rows);
+
+    for (unsigned int row = 0; row < result.rows; row++) {
+        for (unsigned int column = 0; column < result.columns; column++) {
+            result.matrix[row * result.columns + column] = this -> matrix[(this->rows - column - 1) * (this -> columns) + row];
+        }
+    }
+    return result;
+}
+
+Matrix Matrix::rotateCounterClockwise() const {
+    Matrix result(this -> columns, this -> rows);
+
+    for (unsigned int row = 0; row < result.rows; row++) {
+        for (unsigned int column = 0; column < result.columns; column++) {
+            result.matrix[row * result.columns + column] = this -> matrix[column * (this -> columns) + (this->columns - row - 1)];
+        }
+    }
+    return result;
+}
+
+
+
+Matrix Matrix::Transpose() const {
+    Matrix result(this -> columns, this -> rows);
+    for (unsigned int row = 0; row < result.rows; row++) {
+        for (unsigned int column = 0; column < result.columns; column++) {
+            result.matrix[row * result.columns + column] = this->matrix[column * (this -> columns) + row];
+        }
+    }
+    return result;
+}
+
+
 
 
 bool operator==(const Matrix& matrix1, const Matrix& matrix2) {
@@ -162,6 +254,36 @@ double Matrix::frobenius()const {
         }
     }
     return std:: sqrt(sumSquares);
+}
+
+
+int Matrix::CalcDeterminant() const {
+    if (this -> columns != this -> rows) {
+        exitWithError(MatamErrorType::NotSquareMatrix);
+    }
+    if (this -> columns == 1) {
+        return this -> matrix[0];
+    }
+
+    int determinant = 0;
+    Matrix temp(this -> rows -1, this -> columns -1);
+    for (int i = 0; i < columns; i++) {
+        for (int row = 1; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
+                if (column < i) {
+                    temp(row - 1, column) = this->matrix[row * columns + column];
+                }else if (column > i) {
+                    temp(row - 1, column - 1) = this->matrix[row * columns + column];
+                }
+            }
+        }
+        if (i % 2 == 0) {
+            determinant += this -> matrix[i] * temp.CalcDeterminant();
+        }else {
+            determinant -= this -> matrix[i] * temp.CalcDeterminant();
+        }
+    }
+    return determinant;
 }
 
 

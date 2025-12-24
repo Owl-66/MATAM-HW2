@@ -86,3 +86,48 @@ std::ostream& operator<<(std::ostream& os, const MataMvidia& movie) {
     os << "-----End of Movie-----" ;
     return os;
 }
+
+
+
+Matrix &MataMvidia::operator[](int index) {
+    return frameArray[index];
+}
+
+const Matrix &MataMvidia::operator[](int index) const {
+    return frameArray[index];
+}
+
+
+
+MataMvidia &MataMvidia::operator+=(const MataMvidia &other) {
+    unsigned int newSize = this -> numFrames + other.numFrames;
+    Matrix* newFrameArray = new Matrix[newSize];
+
+    for (unsigned int i = 0; i < this -> numFrames; i++) {
+        newFrameArray[i] = this->frameArray[i];
+    }
+    for (unsigned int i = this -> numFrames; i < newSize; i++) {
+        newFrameArray[i] = other.frameArray[i - this -> numFrames];
+    }
+
+
+    delete[] this->frameArray;
+
+    this -> numFrames = newSize;
+    this -> frameArray = newFrameArray;
+
+    return *this;
+}
+
+MataMvidia &MataMvidia::operator+=(const Matrix &other) {
+    std::string fakeName = "not a name";
+    MataMvidia temp(fakeName, fakeName, &other, 1);
+    *this += temp;
+    return *this;
+}
+
+MataMvidia operator+(const MataMvidia& movie1, const MataMvidia& movie2) {
+    MataMvidia result(movie1);
+    result += movie2;
+    return result;
+}
