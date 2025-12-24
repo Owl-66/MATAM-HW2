@@ -29,17 +29,6 @@ Matrix::~Matrix() {
 }
 
 
-unsigned int Matrix::getRows() const {
-    return this -> rows;
-}
-
-unsigned int Matrix::getColumns() const {
-    return this -> columns;
-}
-
-int* Matrix::getMatrix() const {
-    return this -> matrix;
-}
 
 
 Matrix::Matrix(const Matrix &other) {
@@ -90,9 +79,9 @@ const int& Matrix::operator()(unsigned int row, unsigned int column) const {
 
 
 std::ostream& operator<<(std::ostream& os, const Matrix& matrix) {
-    for (unsigned int i = 0; i < matrix.getRows(); i++) {
+    for (unsigned int i = 0; i < matrix.rows; i++) {
         os << "|";
-        for (unsigned int j = 0; j < matrix.getColumns(); j++) {
+        for (unsigned int j = 0; j < matrix.columns; j++) {
             os << matrix(i,j)<< "|";
         }
         os << std::endl;
@@ -213,7 +202,7 @@ Matrix Matrix::rotateCounterClockwise() const {
 
 
 
-Matrix Matrix::Transpose() const {
+Matrix Matrix::transpose() const {
     Matrix result(this -> columns, this -> rows);
     for (unsigned int row = 0; row < result.rows; row++) {
         for (unsigned int column = 0; column < result.columns; column++) {
@@ -246,41 +235,42 @@ bool operator!=(const Matrix& matrix1, const Matrix& matrix2) {
 }
 
 
-double Matrix::frobenius()const {
+double Matrix::CalcFrobeniusNorm(const Matrix& m){
     double sumSquares = 0;
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < columns; j++) {
-            sumSquares += matrix[i*columns +j] * matrix[i*columns +j];
+    for (int i = 0; i < m.rows; i++) {
+        for (int j = 0; j < m.columns; j++) {
+            sumSquares += m.matrix[i*m.columns +j] * m.matrix[i*m.columns +j];
         }
     }
     return std:: sqrt(sumSquares);
 }
 
 
-int Matrix::CalcDeterminant() const {
-    if (this -> columns != this -> rows) {
+int Matrix::CalcDeterminant(const Matrix& m){
+    if (m.columns != m.rows) {
         exitWithError(MatamErrorType::NotSquareMatrix);
     }
-    if (this -> columns == 1) {
-        return this -> matrix[0];
+    if (m.columns == 1) {
+        return m.matrix[0];
     }
 
+
     int determinant = 0;
-    Matrix temp(this -> rows -1, this -> columns -1);
-    for (int i = 0; i < columns; i++) {
-        for (int row = 1; row < rows; row++) {
-            for (int column = 0; column < columns; column++) {
+    Matrix temp(m.rows -1, m.columns -1);
+    for (int i = 0; i < m.columns; i++) {
+        for (int row = 1; row < m.rows; row++) {
+            for (int column = 0; column < m.columns; column++) {
                 if (column < i) {
-                    temp(row - 1, column) = this->matrix[row * columns + column];
+                    temp(row - 1, column) = m.matrix[row * m.columns + column];
                 }else if (column > i) {
-                    temp(row - 1, column - 1) = this->matrix[row * columns + column];
+                    temp(row - 1, column - 1) = m.matrix[row * m.columns + column];
                 }
             }
         }
         if (i % 2 == 0) {
-            determinant += this -> matrix[i] * temp.CalcDeterminant();
+            determinant += m.matrix[i] * CalcDeterminant(temp);
         }else {
-            determinant -= this -> matrix[i] * temp.CalcDeterminant();
+            determinant -= m.matrix[i] * CalcDeterminant(temp);
         }
     }
     return determinant;

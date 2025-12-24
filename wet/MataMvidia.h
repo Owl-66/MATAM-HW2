@@ -34,7 +34,7 @@ public:
     MataMvidia& operator+=(const Matrix& other);
 };
 
-};
+
 
 MataMvidia operator+(const MataMvidia& movie1, const MataMvidia& movie2);
 

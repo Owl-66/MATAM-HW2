@@ -20,11 +20,7 @@ public:
     Matrix(unsigned int rows, unsigned int columns, int value = 0);
 
     ~Matrix();
-
-    unsigned int getRows() const;
-    unsigned int getColumns() const;
-    int* getMatrix() const;
-
+    
     Matrix(const Matrix& other);
 
     Matrix& operator=(const Matrix& other);
@@ -41,16 +37,17 @@ public:
     Matrix rotateClockwise() const;
     Matrix rotateCounterClockwise() const;
 
-    Matrix Transpose() const;
+    Matrix transpose() const;
 
     friend bool operator==(const Matrix& matrix1, const Matrix& matrix2);
 
-    double frobenius() const;
+    static double CalcFrobeniusNorm(const Matrix& m);
 
-    int CalcDeterminant() const;
+
+    static int CalcDeterminant(const Matrix& m);
+
+    friend std::ostream& operator<<(std::ostream& os, const Matrix& matrix);
 };
-
-std::ostream& operator<<(std::ostream& os, const Matrix& matrix);
 
 Matrix operator+(const Matrix& matrix1, const Matrix& matrix2);
 Matrix operator-(const Matrix& matrix1, const Matrix& matrix2);
